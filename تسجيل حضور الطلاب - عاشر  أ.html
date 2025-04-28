@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل حضور الطلاب - عاشر أ</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- SweetAlert2 CSS (v7 used in JS) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css"/>
+  <!-- Cairo Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* --- Theme Variables --- */
+    :root { /* Default: Dark Theme Variables */
+      --bg-color: #1a1a1a;
+      --surface-color: #2c2c2c;
+      --surface-variant: #3a3a3a;
+      --primary-text-color: #e0e0e0;
+      --secondary-text-color: #b0b0b0;
+      --accent-color: #00aaff;
+      --accent-hover-color: #0088cc;
+      --accent-focus-shadow: rgba(0, 170, 255, 0.5);
+      --error-color: #ff6b6b;
+      --error-hover-color: #ff4f4f;
+      --error-rgb: 255, 107, 107;
+      --border-color: #4a4a4a;
+      --input-bg-color: #3f3f3f;
+      --input-border-color: #5a5a5a;
+      --button-text-color: #ffffff;
+      --theme-toggle-bg: var(--surface-color);
+      --theme-toggle-hover-bg: var(--surface-variant);
+      --theme-toggle-text: var(--primary-text-color);
+      --container-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      --scrollbar-track-color: #2c2c2c;
+      --scrollbar-thumb-color: #5a5a5a;
+      --scrollbar-thumb-hover-color: #7a7a7a;
+      --login-form-bg: var(--surface-color);
+      --login-error-text: var(--error-color);
+      --login-input-bg: var(--input-bg-color);
+      --login-input-border: var(--input-border-color);
+      --login-button-bg: var(--accent-color);
+      --login-button-hover-bg: var(--accent-hover-color);
+      --login-button-text: var(--button-text-color);
+      --logout-button-bg: var(--error-color);
+      --logout-button-hover-bg: var(--error-hover-color);
+      --logout-button-text: var(--button-text-color);
+    }
+
+    body[data-theme="light"] { /* Light Theme Variables */
+      --bg-color: #f4f6f9;
+      --surface-color: #ffffff;
+      --surface-variant: #e9ecef;
+      --primary-text-color: #212529;
+      --secondary-text-color: #6c757d;
+      --accent-color: #007bff;
+      --accent-hover-color: #0056b3;
+      --accent-focus-shadow: rgba(0, 123, 255, 0.5);
+      --error-color: #dc3545;
+      --error-hover-color: #c82333;
+      --error-rgb: 220, 53, 69;
+      --border-color: #dee2e6;
+      --input-bg-color: #ffffff;
+      --input-border-color: #ced4da;
+      --button-text-color: #ffffff;
+      --theme-toggle-bg: var(--surface-color);
+      --theme-toggle-hover-bg: var(--surface-variant);
+      --theme-toggle-text: var(--primary-text-color);
+      --container-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      --scrollbar-track-color: #f1f1f1;
+      --scrollbar-thumb-color: #ced4da;
+      --scrollbar-thumb-hover-color: #adb5bd;
+      --login-form-bg: var(--surface-color);
+      --login-error-text: var(--error-color);
+      --login-input-bg: var(--input-bg-color);
+      --login-input-border: var(--input-border-color);
+      --login-button-bg: var(--accent-color);
+      --login-button-hover-bg: var(--accent-hover-color);
+      --login-button-text: var(--button-text-color);
+      --logout-button-bg: var(--error-color);
+      --logout-button-hover-bg: var(--error-hover-color);
+      --logout-button-text: var(--button-text-color);
+    }
+
+    /* --- Base Styles --- */
+    body {
+      background-color: var(--bg-color); color: var(--primary-text-color); font-family: 'Cairo', sans-serif; direction: rtl; text-align: right; transition: background-color 0.3s ease, color 0.3s ease; line-height: 1.6;
+    }
+
+    /* --- Login Form Container --- */
+    #login-container { max-width: 420px; margin: 80px auto; padding: 35px 40px; background-color: var(--login-form-bg); border-radius: 12px; box-shadow: var(--container-shadow); border: 1px solid var(--border-color); transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, visibility 0.3s ease; opacity: 1; visibility: visible; }
+    #login-container.hidden { opacity: 0; visibility: hidden; height: 0; margin: 0 auto; padding: 0 40px; overflow: hidden; }
+     #login-container h4 { color: var(--primary-text-color); margin-bottom: 30px; text-align: center; font-weight: 700; transition: color 0.3s ease; }
+     .form-group { margin-bottom: 20px; }
+     .form-group label { color: var(--secondary-text-color); margin-bottom: 8px; font-size: 0.9rem; font-weight: 600; display: block; transition: color 0.3s ease; }
+     .form-control { background-color: var(--login-input-bg); color: var(--primary-text-color); border: 1px solid var(--login-input-border); border-radius: 8px; padding: 12px 18px; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s ease; font-size: 1rem; width: 100%; }
+     .form-control:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px var(--accent-focus-shadow); outline: none; }
+     #login-button { background-color: var(--login-button-bg); border-color: var(--login-button-bg); color: var(--login-button-text); padding: 12px 20px; font-weight: 700; font-size: 1rem; border-radius: 8px; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease, transform 0.1s ease; width: 100%; margin-top: 10px; cursor: pointer; }
+     #login-button:hover:not(:disabled) { background-color: var(--login-button-hover-bg); border-color: var(--login-button-hover-bg); transform: translateY(-2px); }
+     #login-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+     #login-error { color: var(--login-error-text); font-size: 0.9rem; margin-top: 20px; text-align: center; min-height: 1.2em; display: none; transition: color 0.3s ease; font-weight: 600; }
+
+    /* --- Main Attendance Content --- */
+    #main-content { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
+    #main-content.visible { display: block; opacity: 1; }
+    .container { margin-top: 50px; margin-bottom: 50px; }
+    .form-container { max-width: 600px; margin: 50px auto; padding: 40px; background-color: var(--surface-color); border-radius: 12px; box-shadow: var(--container-shadow); border: 1px solid var(--border-color); transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+    .form-container h4 { color: var(--primary-text-color); margin-bottom: 15px; text-align: center; font-weight: 700; transition: color 0.3s ease; }
+    .form-container p.small { color: var(--secondary-text-color); margin-bottom: 30px; text-align: center; transition: color 0.3s ease; }
+    .form-container h5 { color: var(--primary-text-color); margin-bottom: 15px; font-size: 1.2rem; transition: color 0.3s ease; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+
+    /* --- Student List Container & Scrollbar Styling --- */
+        /* --- Student List Container & Scrollbar Styling --- */
+
+    .student-list-container { max-height: 450px; margin-bottom: 1.5rem; overflow-y: auto; border: 1px solid var(--border-color);padding-right: 10px;padding-left: 10px; border-radius: 8px; background-color: var(--bg-color); position: relative; transition: border-color 0.3s ease, background-color 0.3s ease; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color); }
+        /* --- Student List Container & Scrollbar Styling --- */
+    /* --- Student List Container & Scrollbar Styling --- */
+
+    .student-list-container::-webkit-scrollbar { width: 10px; }
+    .student-list-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: 10px; }
+    .student-list-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: 10px; border: 2px solid var(--scrollbar-track-color); }
+    .student-list-container::-webkit-scrollbar-thumb:hover { background-color: var(--scrollbar-thumb-hover-color); }
+
+    /* --- Loading/Error States within List --- */
+    .loading-container { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 20px; min-height: 150px; }
+    .pulsing-loader { display: flex; justify-content: center; align-items: center; gap: 12px; height: 40px; }
+    .pulsing-loader span { background-color: var(--accent-color); animation: pulse 1.4s infinite ease-in-out both; transition: background-color 0.3s ease; width: 14px; height: 14px; border-radius: 50%; opacity: 0.3; transform: scale(0.8); }
+    .pulsing-loader span:nth-child(1) { animation-delay: -0.32s; } .pulsing-loader span:nth-child(2) { animation-delay: -0.16s; } @keyframes pulse { 0%, 80%, 100% { transform: scale(0.8); opacity: 0.3; } 40% { transform: scale(1.0); opacity: 1; } }
+    .loading-text { margin-top: 20px; font-size: 1.1rem; color: var(--secondary-text-color); transition: color 0.3s ease; font-weight: 600; }
+    .error-message { text-align: center; padding: 25px; color: var(--error-color); font-weight: bold; background-color: rgba(var(--error-rgb), 0.1); border-radius: 6px; border: 1px solid var(--error-color); margin: 20px; transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;}
+
+    /* --- Individual Student Item (Form Check) --- */
+    .form-check {
+      margin-right: 5px;
+      display:grid;
+      align-items: center; /* Vertically align items */
+      padding: 15px 25px; /* Padding around the whole item */
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.2s ease, border-color 0.3s ease;
+      cursor: pointer;
+    }
+    .form-check:last-child { border-bottom: none; }
+    .form-check:hover { background-color: var(--surface-variant); }
+
+    /* --- Checkbox Input Styling --- */
+    .form-check-input {
+      flex-shrink: 0; order: 1; width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent-color); background-color: var(--input-bg-color); border: 2px solid var(--input-border-color); border-radius: 5px; transition: transform 0.2s ease-in-out, border-color 0.2s ease, background-color 0.3s ease, box-shadow 0.2s ease; appearance: none; -webkit-appearance: none; -moz-appearance: none; display: grid; place-content: center; margin: 0; margin-inline-end: 15px; /* Space after checkbox */
+    }
+    .form-check-input::before { content: ""; width: 0.75em; height: 0.75em; transform: scale(0); transition: 100ms transform ease-in-out; box-shadow: inset 1em 1em var(--accent-color); background-color: transparent; transform-origin: center center; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); }
+    .form-check-input:checked { border-color: var(--accent-color); background-color: var(--input-bg-color); }
+    .form-check-input:checked::before { transform: scale(1); }
+    .form-check-input:focus { outline: none; box-shadow: 0 0 0 3px var(--accent-focus-shadow); border-color: var(--accent-color); }
+
+    /* --- Checkbox Label Styling (Now mostly a container) --- */
+    .form-check-label {
+      flex-grow: 1; /* Allow label to take remaining space */
+      order: 2; /* Place label visually second in RTL */
+      margin: 0; /* Ensure no extra margins on the label itself */
+      cursor: pointer;
+      min-width: 0; /* Important for flex wrapping */
+      display: inline-block; /* Ensure it takes space correctly */
+      vertical-align: middle; /* Align label container vertically */
+    }
+
+    /* --- NEW: Dedicated Class for Student Name Text --- */
+    .student-name-text {
+        font-size: 1.05rem; /* Moved from .form-check-label */
+        color: var(--primary-text-color); /* Moved from .form-check-label */
+        transition: color 0.3s ease; /* Add transition here if needed */
+        display: inline-block; /* Or block if you want full width */
+        vertical-align: middle; /* Align text vertically */
+        /* Add any specific styles YOU want for the name here */
+        /* Example: font-weight: 600; */
+        /* Example: background-color: yellow; */
+        overflow-wrap: break-word; /* Keep text wrapping properties */
+        word-break: break-word;    /* Keep text wrapping properties */
+        line-height: 1.5;         /* Keep line height */
+    }
+
+    /* --- Submit Button --- */
+    .btn-primary { background-color: var(--accent-color); border-color: var(--accent-color); color: var(--button-text-color); font-weight: 700; padding: 12px 25px; border-radius: 8px; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.1s ease; text-transform: uppercase; letter-spacing: 0.8px; font-size: 1rem; cursor: pointer; width: 100%; display: block; text-align: center; }
+    .btn-primary:hover:not(:disabled), .btn-primary:focus { background-color: var(--accent-hover-color); border-color: var(--accent-hover-color); color: var(--button-text-color); outline: none; transform: translateY(-2px); }
+    .btn-primary:focus { box-shadow: 0 0 0 0.25rem var(--accent-focus-shadow); }
+    .btn-primary:disabled { background-color: var(--secondary-text-color); border-color: var(--secondary-text-color); color: var(--surface-variant); opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* --- Theme Toggle Button --- */
+    #theme-toggle-btn { position: fixed; top: 20px; inset-inline-start: 20px; z-index: 1050; background-color: var(--theme-toggle-bg); color: var(--theme-toggle-text); border: 1px solid var(--border-color); border-radius: 50%; width: 48px; height: 48px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; }
+    #theme-toggle-btn:hover { background-color: var(--theme-toggle-hover-bg); transform: scale(1.08) rotate(15deg); }
+    #theme-toggle-btn:focus { outline: none; box-shadow: 0 0 0 3px var(--accent-focus-shadow); }
+
+    /* --- Logout Button --- */
+    #logout-button { position: fixed; top: 20px; inset-inline-end: 20px; z-index: 1050; padding: 8px 15px; background-color: var(--logout-button-bg); color: var(--logout-button-text); border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; font-family: 'Cairo', sans-serif; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease; }
+    #logout-button:hover { background-color: var(--logout-button-hover-bg); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.25); }
+     #logout-button:focus { outline: none; box-shadow: 0 0 0 3px var(--accent-focus-shadow); }
+
+    /* --- SweetAlert Theming --- */
+    .swal2-popup { background-color: var(--surface-color) !important; color: var(--primary-text-color) !important; border: 1px solid var(--border-color); border-radius: 12px !important; z-index: 1060 !important; box-shadow: var(--container-shadow) !important; }
+    .swal2-title { color: var(--primary-text-color) !important; font-weight: 700 !important; }
+    .swal2-content, .swal2-html-container { color: var(--primary-text-color) !important; line-height: 1.7 !important; }
+    .swal2-input { background-color: var(--input-bg-color) !important; color: var(--primary-text-color) !important; border: 1px solid var(--input-border-color) !important; border-radius: 8px !important; }
+    .swal2-input:focus { border-color: var(--accent-color) !important; box-shadow: 0 0 0 3px var(--accent-focus-shadow) !important; }
+    .swal2-validation-message { background-color: rgba(var(--error-rgb), 0.1) !important; color: var(--error-color) !important; border-radius: 6px !important; padding: 8px 12px !important; }
+    .swal2-styled.swal2-confirm { background-color: var(--accent-color) !important; color: var(--button-text-color) !important; border-color: var(--accent-color) !important; box-shadow: none !important; border-radius: 8px !important; padding: 10px 25px !important; font-weight: 600 !important; transition: background-color 0.2s ease !important; }
+    .swal2-styled.swal2-confirm:focus { box-shadow: 0 0 0 3px var(--accent-focus-shadow) !important; }
+    .swal2-styled.swal2-cancel { background-color: var(--surface-variant) !important; color: var(--primary-text-color) !important; border-radius: 8px !important; font-weight: 600 !important; padding: 10px 25px !important; transition: background-color 0.2s ease !important; border: 1px solid var(--border-color) !important; }
+    .swal2-styled.swal2-cancel:hover { background-color: var(--border-color) !important; }
+    .swal2-popup.logout-confirm .swal2-styled.swal2-confirm { background-color: var(--error-color) !important; border-color: var(--error-color) !important; }
+     .swal2-popup.logout-confirm .swal2-styled.swal2-confirm:focus { box-shadow: 0 0 0 3px rgba(var(--error-rgb), 0.5) !important; }
+
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- Theme Toggle Button -->
+  <button id="theme-toggle-btn" aria-label="تبديل المظهر" title="تبديل المظهر">
+    <span id="theme-icon">☀️</span>
+  </button>
+  <!-- Logout button will be added dynamically here by JS if logged in -->
+
+  <!-- Login Form Container -->
+  <div id="login-container">
+      <h4>تسجيل الدخول</h4>
+      <form id="login-form">
+          <div class="form-group">
+              <label for="username">اسم المستخدم</label>
+              <input type="text" class="form-control" id="username" name="username" required autocomplete="username">
+          </div>
+          <div class="form-group">
+              <label for="password">كلمة المرور</label>
+              <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
+          </div>
+          <button type="submit" id="login-button" class="btn btn-primary btn-block">دخول</button>
+          <div id="login-error"></div>
+      </form>
+  </div>
+
+  <!-- Main Attendance Content -->
+  <div id="main-content">
+    <div class="container">
+      <div class="form-container">
+        <h4 class="text-center">تسجيل حضور الطلاب - عاشر ب</h4>
+        <p class="text-center small mb-4">ضع علامة بجانب اسم الطالب لتسجيل حضوره.</p>
+        <form id="submit-attendance-to-google-sheet" name="submit-attendance-to-google-sheet">
+          <h5>قائمة الطلاب:</h5>
+          <div id="student-list-container" class="student-list-container" tabindex="0" aria-label="قائمة الطلاب لتسجيل الحضور">
+             <div class="loading-container" id="list-loading">
+               <div class="pulsing-loader"><span></span><span></span><span></span></div>
+               <div class="loading-text text-center">التحقق من حالة تسجيل الدخول...</div>
+             </div>
+          </div>
+          <button type="submit" id="submit-button" class="btn btn-primary btn-block mt-4" disabled>
+            إرسال الحضور
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+   <!-- JS Libraries -->
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+
+   <script>
+    // !!! IMPORTANT: Replace this URL with your actual Google Apps Script URL !!!
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwuyLyrjoZ9iedVZcXK-oFTe8TD3lQ9WVdisNErfba_Zc4WQGBo3QlknFZ3PRHuyxBbtQ/exec"; // <<< PUT YOUR SCRIPT URL HERE
+
+    // DOM Elements
+    const loginForm = document.getElementById('login-form');
+    const loginContainer = document.getElementById('login-container');
+    const loginButton = document.getElementById('login-button');
+    const loginErrorDiv = document.getElementById('login-error');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+
+    const mainContentDiv = document.getElementById('main-content');
+    const attendanceForm = document.forms["submit-attendance-to-google-sheet"];
+    const studentListContainer = document.getElementById("student-list-container");
+    const listLoadingDiv = document.getElementById("list-loading"); // Get loading div reference
+
+    // Theme Elements
+    const themeToggleButton = document.getElementById('theme-toggle-btn');
+    const bodyElement = document.body;
+
+    // Will be selected after main content is visible
+    let submitButton = null;
+
+    // --- Theme Management ---
+    const updateToggleButton = (theme) => { if (theme === 'light') { themeToggleButton.innerHTML = '🌙'; themeToggleButton.setAttribute('aria-label', 'التبديل إلى المظهر الداكن'); } else { themeToggleButton.innerHTML = '☀️'; themeToggleButton.setAttribute('aria-label', 'التبديل إلى المظهر الفاتح'); } };
+    const applyTheme = (theme) => { bodyElement.dataset.theme = theme; localStorage.setItem('theme', theme); updateToggleButton(theme); };
+    const toggleTheme = () => { const currentTheme = bodyElement.dataset.theme || 'dark'; const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; applyTheme(newTheme); };
+    const initializeTheme = () => { const savedTheme = localStorage.getItem('theme'); const initialTheme = (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'dark'; applyTheme(initialTheme); };
+    themeToggleButton.addEventListener('click', toggleTheme);
+    // --- End Theme Management ---
+
+
+    // --- Login/Logout Logic ---
+    function showLoginScreen() {
+       mainContentDiv.classList.remove('visible');
+       loginContainer.classList.remove('hidden');
+       const logoutBtn = document.getElementById('logout-button');
+       if (logoutBtn) logoutBtn.remove();
+       usernameInput.value = '';
+       passwordInput.value = '';
+       loginErrorDiv.textContent = '';
+       loginErrorDiv.style.display = 'none';
+       setTimeout(() => usernameInput.focus(), 50);
+    }
+
+    function showAppScreen() {
+       loginContainer.classList.add('hidden');
+       mainContentDiv.classList.add('visible');
+       addLogoutButton();
+
+       submitButton = attendanceForm.querySelector('button[type="submit"]');
+       if (!submitButton) {
+           console.error("Could not find the attendance submit button!");
+           displayError("خطأ في تهيئة الصفحة. لم يتم العثور على زر الإرسال.");
+           return;
+       }
+       setLoadingMessage("جاري تحميل قائمة الطلاب...");
+       fetchStudentList();
+    }
+
+   function addLogoutButton() {
+       if (document.getElementById('logout-button')) return;
+
+       const logoutBtn = document.createElement('button');
+       logoutBtn.id = 'logout-button';
+       logoutBtn.textContent = 'تسجيل الخروج';
+       logoutBtn.title = 'تسجيل الخروج';
+
+       logoutBtn.addEventListener('click', () => {
+           swal({
+               title: 'تسجيل الخروج',
+               text: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+               type: 'warning',
+               showCancelButton: true,
+               confirmButtonText: 'نعم، خروج',
+               cancelButtonText: 'إلغاء',
+               customClass: 'logout-confirm'
+           }).then((result) => {
+               if (result.value) {
+                   localStorage.removeItem('isLoggedIn');
+                   showLoginScreen();
+               }
+           });
+       });
+       document.body.appendChild(logoutBtn);
+   }
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!username || !password) {
+            showLoginError("الرجاء إدخال اسم المستخدم وكلمة المرور.");
+            return;
+        }
+
+        loginButton.disabled = true;
+        loginButton.textContent = "جاري التحقق...";
+        showLoginError("");
+
+        const formData = new FormData();
+        formData.append('action', 'login');
+        formData.append('username', username);
+        formData.append('password', password);
+
+        fetch(scriptURL, { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    console.log("Login successful");
+                    localStorage.setItem('isLoggedIn', 'true');
+                    showAppScreen();
+                } else {
+                    console.error("Login failed:", data.error);
+                    showLoginError(data.error || 'فشل تسجيل الدخول. تحقق من اسم المستخدم وكلمة المرور.');
+                    loginButton.disabled = false;
+                    loginButton.textContent = "دخول";
+                    passwordInput.value = "";
+                    passwordInput.focus();
+                }
+            })
+            .catch(error => {
+                console.error('Login fetch error:', error);
+                showLoginError('حدث خطأ أثناء الاتصال بالخادم. تحقق من اتصالك.');
+                loginButton.disabled = false;
+                loginButton.textContent = "دخول";
+            });
+    });
+
+    function showLoginError(message) {
+        loginErrorDiv.textContent = message;
+        loginErrorDiv.style.display = message ? 'block' : 'none';
+    }
+    // --- End Login/Logout Logic ---
+
+
+    // --- Student List Handling ---
+    function setLoadingMessage(message) {
+        studentListContainer.innerHTML = `
+          <div class="loading-container" id="list-loading">
+             <div class="pulsing-loader"><span></span><span></span><span></span></div>
+             <div class="loading-text text-center">${message}</div>
+          </div>`;
+    }
+
+    async function fetchStudentList() {
+      if (!submitButton) {
+          console.error("fetchStudentList called but submit button not found!");
+          displayError("خطأ داخلي: زر الإرسال غير جاهز.");
+          return;
+      }
+      submitButton.disabled = true;
+      setLoadingMessage("جاري تحميل قائمة الطلاب...");
+
+      const url = `${scriptURL}?action=getStudents`;
+      console.log("Fetching student list from:", url);
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`فشل الاتصال بالخادم: ${response.statusText} (${response.status}). ${errorText}`);
+        }
+        const data = await response.json();
+        console.log("Student data received:", data);
+
+        if (data.result === "success" && Array.isArray(data.students)) {
+          renderStudentList(data.students);
+          // submitButton enabled/disabled state handled within renderStudentList
+        } else {
+           let errorDetail = data.error || "صيغة الرد غير صحيحة.";
+           throw new Error(`فشل جلب الطلاب من السكربت. ${errorDetail}`);
+        }
+      } catch (error) {
+        console.error("Error fetching student list!", error);
+        displayError(`فشل تحميل قائمة الطلاب.<br><small>${error.message}</small>`);
+        if (submitButton) submitButton.disabled = true; // Keep disabled on error
+      }
+    }
+
+    // --- Updated renderStudentList function ---
+    function renderStudentList(students) {
+        studentListContainer.innerHTML = ""; // Clear loading/previous content
+        if (!students || students.length === 0) {
+            studentListContainer.innerHTML = '<p class="error-message text-center p-3" style="background:transparent; border:none; color: var(--secondary-text-color);">لم يتم العثور على طلاب لهذه الفئة.</p>';
+            if (submitButton) submitButton.disabled = true;
+            return;
+        }
+        students.forEach((student, index) => {
+            const studentName = String(student || `طالب ${index + 1}`).trim();
+            if (!studentName) return; // Skip empty names
+
+            const safeNameSuffix = studentName.replace(/[^a-zA-Z0-9\u0600-\u06FF_-]/g, "_") + index;
+            const elementId = `student_${safeNameSuffix}`; // Unique ID
+            const elementName = `student_${studentName}`; // Name attribute
+
+            const div = document.createElement("div");
+            div.className = "form-check"; // Parent container for flex layout
+
+            const input = document.createElement("input");
+            input.className = "form-check-input"; // Styles for the checkbox itself
+            input.type = "checkbox";
+            input.id = elementId;
+            input.name = elementName;
+            input.value = "حاضر";
+
+            const label = document.createElement("label");
+            label.className = "form-check-label"; // Styles for the label container
+            label.htmlFor = elementId;
+
+            // --- NEW: Create a span for the name ---
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "student-name-text"; // <<< THE NEW DEDICATED CLASS
+            nameSpan.textContent = studentName;
+            label.appendChild(nameSpan); // Add the span inside the label
+            // --- END NEW ---
+
+            // DOM order: Input first, then Label (containing the span)
+            div.appendChild(input);
+            div.appendChild(label);
+            // CSS order handles visual order
+            // CSS margin-inline-end on input handles spacing
+
+            // Click handler for the entire div
+            div.addEventListener('click', (event) => {
+               // Prevent double toggling if clicking the div background
+               if (event.target === div) {
+                    input.checked = !input.checked;
+               }
+            });
+            studentListContainer.appendChild(div);
+        });
+        // Enable submit button after rendering if it exists and students were added
+        if (submitButton && students.length > 0) submitButton.disabled = false;
+        else if (submitButton) submitButton.disabled = true; // Ensure disabled if list is empty after filtering
+    }
+    // --- End of Updated renderStudentList function ---
+
+
+    function displayError(message) {
+       if (submitButton) submitButton.disabled = true;
+       studentListContainer.innerHTML = `<div class="error-message">${message}</div>`;
+    }
+    // --- End Student List Handling ---
+
+
+    // --- Attendance Form Submission ---
+    attendanceForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!submitButton || submitButton.disabled) return;
+
+      const checkedStudents = attendanceForm.querySelectorAll('input[type="checkbox"]:checked');
+      if (checkedStudents.length === 0) {
+          swal("تنبيه", "الرجاء تحديد طالب واحد على الأقل لتسجيل الحضور.", "warning");
+          return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "جاري الإرسال...";
+
+      const formData = new FormData(attendanceForm);
+      formData.append('action', 'recordAttendance');
+
+      fetch(scriptURL, { method: "POST", body: formData })
+        .then(response => {
+            if (!response.ok) { return response.text().then(text => { throw new Error(`استجابة الشبكة غير صالحة: ${response.statusText} (${response.status}) - ${text}`); }); }
+            return response.json();
+        })
+        .then((data) => {
+          console.log("Attendance submission response:", data);
+          if (data.result === "success") {
+            swal("تم بنجاح!", data.message || "تم تسجيل الحضور.", "success");
+            checkedStudents.forEach(cb => cb.checked = false);
+          } else {
+            swal("خطأ", data.error || "فشل إرسال الحضور.", "error");
+          }
+        })
+        .catch((error) => {
+          console.error("Error submitting attendance!", error);
+          swal("خطأ في الشبكة", `تعذر إرسال الحضور.\n\nتفاصيل: ${error.message}`, "error");
+        })
+        .finally(() => {
+           if(submitButton) {
+               const studentCheckboxesExist = studentListContainer.querySelector('.form-check-input');
+               submitButton.disabled = !studentCheckboxesExist;
+               submitButton.textContent = "إرسال الحضور";
+           }
+        });
+    });
+    // --- End Attendance Form Submission ---
+
+
+    // --- Initialization ---
+    document.addEventListener("DOMContentLoaded", () => {
+        initializeTheme();
+
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            console.log("User already logged in. Showing app screen.");
+            showAppScreen();
+        } else {
+            console.log("User not logged in. Showing login screen.");
+            showLoginScreen();
+        }
+    });
+
+   </script>
+ </body>
+ </html>
