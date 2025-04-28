@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل حضور وغياب عاشر</title>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif; /* استخدام خط مختلف يدعم العربية بشكل جيد */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1e1e1e; /* خلفية داكنة جداً */
+            color: #e0e0e0; /* لون نص فاتح */
+            margin: 0;
+        }
+        h1 {
+            color: #ffffff; /* لون أبيض للعنوان */
+            border-bottom: 2px solid #00aaff; /* خط أسفل العنوان */
+            padding-bottom: 10px;
+            margin-bottom: 40px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column; /* العودة إلى الترتيب العمودي */
+            gap: 18px; /* مسافة بين الأزرار */
+        }
+        button {
+            padding: 15px 35px;
+            font-size: 18px;
+            font-weight: bold; /* خط أعرض قليلاً */
+            color: #00aaff; /* لون النص أزرق فاتح (نفس لون الحد) */
+            background-color: transparent; /* خلفية شفافة */
+            border: 2px solid #00aaff; /* حد أزرق فاتح */
+            border-radius: 30px; /* حواف دائرية جداً (شكل كبسولة) */
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease; /* تأثير انتقال للون الخلفية ولون النص */
+            min-width: 250px; /* عرض أدنى للزر */
+            text-align: center;
+        }
+        button:hover {
+            background-color: #00aaff; /* تغيير الخلفية إلى الأزرق عند المرور */
+            color: #1e1e1e; /* تغيير لون النص إلى الداكن عند المرور */
+        }
+    </style>
+    <!-- يمكنك إضافة هذا السطر إذا أردت استخدام خط Cairo من جوجل -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <h1>اختر شعبة العاشر</h1>
+
+    <div class="button-container">
+        <!-- الزر الأول: يذهب إلى جوجل -->
+        <button onclick="window.location.href='تسجيل حضور الطلاب - عاشر  أ.html';">
+            عاشر أ
+        </button>
+
+        <!-- الزر الثاني: يذهب إلى يوتيوب -->
+        <button onclick="window.location.href='تسجيل حضور الطلاب - عاشر  ب .html';">
+            عاشر ب
+        </button>
+
+        <!-- الزر الثالث: يذهب إلى ويكيبيديا العربية -->
+        <button onclick="window.location.href='تسجيل حضور الطلاب - عاشر  ج.html';">
+            عاشر ج
+        </button>
+
+        <!-- الزر الرابع: يذهب إلى تويتر (X) -->
+        <button onclick="window.location.href='تسجيل حضور الطلاب - عاشر  د .html';">
+            عاشر د
+        </button>
+
+        <!-- الزر الخامس: يذهب إلى فيسبوك -->
+        <button onclick="window.location.href='تسجيل حضور الطلاب - عاشر  هـ.html';">
+           عاشر هـ
+        </button>
+    </div>
+
+</body>
+</html>
